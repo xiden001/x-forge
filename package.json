@@ -1,0 +1,155 @@
+{
+  "name": "x-forge",
+  "displayName": "X-Forge",
+  "description": "Team AI Context + Knowledge Injection for local-first developer workflows.",
+  "version": "0.1.0",
+  "publisher": "xiden001",
+  "engines": {
+    "vscode": "^1.88.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:teamContext.showContextUsed",
+    "onCommand:teamContext.refreshIndex",
+    "onCommand:teamContext.toggleInjection",
+    "onCommand:teamContext.copyPromptWithContext",
+    "onCommand:teamContext.promptPreview",
+    "onView:teamContext.view"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "teamContext.showContextUsed",
+        "title": "Team Context: Show Context Used"
+      },
+      {
+        "command": "teamContext.refreshIndex",
+        "title": "Team Context: Refresh Index"
+      },
+      {
+        "command": "teamContext.toggleInjection",
+        "title": "Team Context: Toggle Injection"
+      },
+      {
+        "command": "teamContext.copyPromptWithContext",
+        "title": "Team Context: Copy Prompt with Context"
+      },
+      {
+        "command": "teamContext.promptPreview",
+        "title": "Team Context: Prompt Preview"
+      },
+      {
+        "command": "teamContext.refreshFromView",
+        "title": "Refresh Index",
+        "icon": "$(refresh)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "teamContext",
+          "title": "Team Context",
+          "icon": "media/context.svg"
+        }
+      ]
+    },
+    "views": {
+      "teamContext": [
+        {
+          "id": "teamContext.view",
+          "name": "Team Context"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "teamContext.refreshFromView",
+          "when": "view == teamContext.view",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Team Context",
+      "properties": {
+        "teamContext.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Team Context injection features."
+        },
+        "teamContext.maxChunks": {
+          "type": "number",
+          "default": 5,
+          "minimum": 1,
+          "maximum": 20,
+          "description": "Maximum number of context chunks to retrieve."
+        },
+        "teamContext.maxTokens": {
+          "type": "number",
+          "default": 1200,
+          "minimum": 200,
+          "description": "Approximate token budget for injected context."
+        },
+        "teamContext.scanPaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "docs",
+            "adr"
+          ],
+          "description": "Workspace-relative folders to scan for context markdown files."
+        },
+        "teamContext.alwaysInclude": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "docs/architecture.md"
+          ],
+          "description": "Workspace-relative files to always include in retrieval results when indexed."
+        },
+        "teamContext.excludePaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Workspace-relative paths to exclude from indexing."
+        },
+        "teamContext.indexOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "description": "Refresh context index automatically when workspace opens."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext .ts",
+    "test": "npm run compile && node ./out/test/runTests.js"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.14.9",
+    "@types/vscode": "^1.88.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.0.0",
+    "mocha": "^10.4.0",
+    "typescript": "^5.5.3"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  }
+}
