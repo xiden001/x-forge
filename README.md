@@ -35,6 +35,7 @@ Open Command Palette and run:
 Activity Bar -> **Team Context**
 
 Displays:
+
 - last retrieved chunks
 - chunk title
 - source file
@@ -81,32 +82,6 @@ exclude:
 
 If present, these values override extension defaults for principles/glossary/alwaysInclude/exclude.
 
-## Development
-
-### Install
-
-```bash
-npm install
-```
-
-### Build
-
-```bash
-npm run compile
-```
-
-### Lint
-
-```bash
-npm run lint
-```
-
-### Test
-
-```bash
-npm test
-```
-
 ### Run in VS Code
 
 1. Open this repo in VS Code.
@@ -114,24 +89,6 @@ npm test
 3. Use Command Palette commands listed above.
 
 Compatible with VS Code and VSCodium (Open VSX packaging supported).
-
-## Packaging
-
-### VS Code Marketplace (`vsce`)
-
-```bash
-npm install -g @vscode/vsce
-vsce package
-```
-
-### Open VSX (`ovsx`)
-
-```bash
-npm install -g ovsx
-ovsx package
-```
-
-Generated `.vsix` can be installed in VS Code/VSCodium.
 
 ## Logging
 
@@ -141,4 +98,3 @@ X-Forge writes operational logs to output channel: **ContextForge**.
 
 - `docs/architecture.md`
 - `adr/0001-sample-adr.md`
-

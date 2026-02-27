@@ -3,7 +3,7 @@
   "displayName": "X-Forge",
   "description": "Team AI Context + Knowledge Injection for local-first developer workflows.",
   "version": "0.1.0",
-  "publisher": "xiden001",
+  "publisher": "SamuelAdoga",
   "engines": {
     "vscode": "^1.88.0"
   },
@@ -140,6 +140,7 @@
     "test": "npm run compile && node ./out/test/runTests.js"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.14.9",
     "@types/vscode": "^1.88.0",
