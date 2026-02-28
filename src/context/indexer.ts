@@ -6,6 +6,7 @@ import { splitMarkdownByHeading } from "../utils/markdownToText";
 import { scanContextFiles } from "../utils/fsScan";
 import { tokenizeKeywords } from "../utils/tokenizer";
 import { ContextStorage } from "./storage";
+import { mergeYamlIntoConfig } from "../utils/configSanitizer";
 
 const MAX_FILE_BYTES = 500_000;
 
@@ -38,7 +39,7 @@ export class ContextIndexer {
         const content = Buffer.from(bytes).toString("utf8");
 
         if (relative.endsWith("team-context.yaml")) {
-          yamlData = yaml.load(content) as TeamContextYaml;
+          yamlData = yaml.load(content, { schema: yaml.JSON_SCHEMA }) as TeamContextYaml;
           continue;
         }
 
@@ -53,13 +54,7 @@ export class ContextIndexer {
       }
     }
 
-    const mergedConfig: RuntimeConfig = {
-      ...config,
-      principles: yamlData?.principles ?? config.principles,
-      glossary: yamlData?.glossary ?? config.glossary,
-      alwaysInclude: yamlData?.alwaysInclude ?? config.alwaysInclude,
-      excludePaths: yamlData?.exclude ?? config.excludePaths
-    };
+    const mergedConfig = mergeYamlIntoConfig(config, yamlData);
 
     const keywordIndex: Record<string, string[]> = Object.create(null) as Record<string, string[]>;
     for (const chunk of chunks) {

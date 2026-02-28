@@ -4,6 +4,7 @@ import { ContextIndexer } from "./context/indexer";
 import { RuntimeConfig } from "./context/types";
 import { ContextViewProvider } from "./ui/contextView";
 import { CommandController, CommandState } from "./ui/commands";
+import { sanitizeRuntimeConfig } from "./utils/configSanitizer";
 
 const defaultPrinciples = [
   "Keep modules small and testable.",
@@ -12,7 +13,7 @@ const defaultPrinciples = [
 
 const loadConfig = (): RuntimeConfig => {
   const cfg = vscode.workspace.getConfiguration("teamContext");
-  return {
+  return sanitizeRuntimeConfig({
     enabled: cfg.get<boolean>("enabled", true),
     maxChunks: cfg.get<number>("maxChunks", 5),
     maxTokens: cfg.get<number>("maxTokens", 1200),
@@ -22,7 +23,7 @@ const loadConfig = (): RuntimeConfig => {
     indexOnStartup: cfg.get<boolean>("indexOnStartup", true),
     principles: defaultPrinciples,
     glossary: {}
-  };
+  });
 };
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
