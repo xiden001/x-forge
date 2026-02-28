@@ -61,11 +61,11 @@ export class ContextIndexer {
       excludePaths: yamlData?.exclude ?? config.excludePaths
     };
 
-    const keywordIndex: Record<string, string[]> = {};
+    const keywordIndex: Record<string, string[]> = Object.create(null) as Record<string, string[]>;
     for (const chunk of chunks) {
       const terms = new Set(tokenizeKeywords(`${chunk.title} ${chunk.text.slice(0, 1000)} ${chunk.source}`));
       for (const term of terms) {
-        if (!keywordIndex[term]) {
+        if (!Array.isArray(keywordIndex[term])) {
           keywordIndex[term] = [];
         }
         keywordIndex[term].push(chunk.id);

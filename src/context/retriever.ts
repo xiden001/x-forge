@@ -29,7 +29,7 @@ export class ContextRetriever {
 
     for (const token of tokens) {
       const ids = index.keywordIndex[token];
-      if (!ids) {
+      if (!Array.isArray(ids)) {
         continue;
       }
       ids.forEach((id) => candidateIds.add(id));
