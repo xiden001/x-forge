@@ -3,6 +3,106 @@
 X-Forge injects **team context** into AI prompts so developers can keep using their preferred coding assistants with better repository awareness.
 
 > Local-first by design: X-Forge indexes docs in your workspace and never sends data externally.
+X-Forge injects your team’s documentation, architecture decisions, and domain knowledge directly into AI prompts — so outputs align with how your team actually builds software.
+
+In Simple terms :- 
+
+Stop copying docs into prompts.  
+Stop rewriting AI responses.  
+Keep your AI aligned with your codebase.
+
+---
+
+## Why X-Forge?
+
+AI assistants are powerful — but they don’t understand your team’s:
+
+- architecture decisions  
+- domain terminology  
+- coding conventions  
+- business rules  
+
+Developers compensate by manually pasting docs into prompts or rewriting AI output.
+
+X-Forge fixes this.
+
+---
+
+## What It Does
+
+When you ask AI to generate code, X-Forge:
+
+✔ finds relevant team docs  
+✔ injects architecture & domain context  
+✔ aligns output with team conventions  
+✔ shows exactly what context was used  
+
+**Result: better AI output on the first try.**
+
+---
+
+## What Makes This Different from claude.md or README docs?
+
+Static docs are passive. X-Forge is contextual.
+
+| Static Docs | X-Forge |
+|------------|------------|
+| Must be opened manually | Injected automatically |
+| Not task-aware | Context-aware |
+| Easy to forget | Always applied |
+| Overwhelming | Only relevant info included |
+| No transparency | Shows context sources |
+
+---
+
+## How It Works
+
+When you trigger an AI prompt:
+
+1. X-Forge scans your repository documentation.
+2. It selects context relevant to your current file and task.
+3. It injects a structured context envelope.
+4. You receive aligned, higher-quality AI output.
+
+---
+## Example
+
+You want to prompt/ask your AI:
+
+> Add validation to prevent duplicate SKUs during import, core logic sits in /inventory/productImporter.php.
+
+X-Forge automatically injects:
+
+- inventory validation rules  
+- SKU uniqueness constraints  
+- error logging conventions  
+- data normalization requirements  
+
+The AI response now follows your team’s architecture and data integrity rules.
+
+---
+
+## Key Points
+
+### Context-Aware Injection
+Injects only the most relevant documentation.
+
+### Team Knowledge Alignment
+Ensures AI suggestions follow team architecture and standards.
+
+### Domain Glossary Awareness
+Prevents terminology mistakes and misunderstandings.
+
+### ADR (Architecture Decision Record) & Architecture Surfacing
+Automatically surfaces design decisions when relevant.
+
+### Transparency Panel
+See what context was used and where it came from.
+
+### Zero Friction Workflow
+No copy/paste. No prompt rewriting.
+
+---
 
 ## Features
 
