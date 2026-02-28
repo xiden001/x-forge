@@ -4,6 +4,10 @@
   "description": "Team AI Context + Knowledge Injection for local-first developer workflows.",
   "version": "0.1.0",
   "publisher": "SamuelAdoga",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xiden001/tech-team"
+  },
   "engines": {
     "vscode": "^1.88.0"
   },
@@ -138,6 +142,11 @@
     "watch": "tsc -watch -p ./",
     "lint": "eslint src --ext .ts",
     "test": "npm run compile && node ./out/test/runTests.js"
+  },
+  "icon": "icon.png",
+  "galleryBanner": {
+    "color": "#667",
+    "theme": "dark"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",

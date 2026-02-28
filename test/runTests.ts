@@ -23,11 +23,15 @@ const collectTests = (dir: string): string[] => {
 
 async function run(): Promise<void> {
   const mocha = new Mocha({ ui: "bdd", color: true });
-  const testRoot = path.resolve(__dirname);
+  const testDir = path.resolve(__dirname, "context");
 
-  const testFiles = collectTests(testRoot).sort();
+  const testFiles = fs
+    .readdirSync(testDir)
+    .filter((file) => file.endsWith(".test.js"))
+    .sort();
+
   for (const file of testFiles) {
-    mocha.addFile(file);
+    mocha.addFile(path.join(testDir, file));
   }
 
   await new Promise<void>((resolve, reject) => {
