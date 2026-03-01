@@ -10,6 +10,16 @@ export interface EnvelopeInput {
 
 const suspiciousLinePattern = /(ignore (all|any|previous|prior) instructions|disregard (the )?(system|developer|previous) instructions|reveal (secrets?|tokens?|credentials?)|exfiltrat(e|ion)|run\s+shell|curl\s+http|wget\s+http|sudo\b|rm\s+-rf)/i;
 const MAX_CONTEXT_LINE_LENGTH = 260;
+const MAX_CONTEXT_CHARS = 800;
+
+const suspiciousCanonicalPattern = /(ignore\s+(all|any|previous|prior)\s+instructions|disregard\s+(the\s+)?(system|developer|previous)\s+instructions|system\s+prompt|developer\s+message|reveal\s+(secrets?|tokens?|credentials?|api\s+keys?)|exfiltrat(e|ion)|run\s+shell|execute\s+command|print\s+env|curl\s+http|wget\s+http|sudo|rm\s+rf)/i;
+
+const canonicalizeForDetection = (value: string): string =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 
 const sanitizeUntrustedContextText = (input: string): { text: string; redacted: boolean } => {
   const rawLines = input.replace(/\r/g, "").split("\n");
@@ -21,7 +31,8 @@ const sanitizeUntrustedContextText = (input: string): { text: string; redacted: 
       return "";
     }
 
-    if (suspiciousLinePattern.test(trimmed)) {
+    const canonical = canonicalizeForDetection(trimmed);
+    if (suspiciousLinePattern.test(trimmed) || suspiciousCanonicalPattern.test(canonical)) {
       redacted = true;
       return "[REDACTED: potential prompt-injection directive removed]";
     }
@@ -33,7 +44,7 @@ const sanitizeUntrustedContextText = (input: string): { text: string; redacted: 
     return trimmed;
   });
 
-  const text = sanitizedLines.filter(Boolean).join(" ").trim();
+  const text = sanitizedLines.filter(Boolean).join(" ").trim().slice(0, MAX_CONTEXT_CHARS);
   return { text, redacted };
 };
 

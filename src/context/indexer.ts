@@ -7,6 +7,7 @@ import { scanContextFiles } from "../utils/fsScan";
 import { tokenizeKeywords } from "../utils/tokenizer";
 import { ContextStorage } from "./storage";
 import { mergeYamlIntoConfig } from "../utils/configSanitizer";
+import { normalizePath } from "../utils/contextPathFilter";
 
 const MAX_FILE_BYTES = 500_000;
 
@@ -34,11 +35,11 @@ export class ContextIndexer {
           continue;
         }
 
-        const relative = vscode.workspace.asRelativePath(file, false);
+        const relative = normalizePath(vscode.workspace.asRelativePath(file, false)).replace(/^\/+/, "");
         const bytes = await vscode.workspace.fs.readFile(file);
         const content = Buffer.from(bytes).toString("utf8");
 
-        if (relative.endsWith("team-context.yaml")) {
+        if (relative === "team-context.yaml") {
           yamlData = yaml.load(content, { schema: yaml.JSON_SCHEMA }) as TeamContextYaml;
           continue;
         }
