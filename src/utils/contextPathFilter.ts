@@ -1,8 +1,8 @@
-import * as path from "path";
 
 const alwaysIncludeFiles = new Set(["README.md", "CONTRIBUTING.md", "team-context.yaml"]);
 
-export const normalizePath = (value: string): string => value.split(path.sep).join("/").replace(/^\.\//, "");
+export const normalizePath = (value: string): string =>
+  value.replace(/[\\/]+/g, "/").replace(/^\.\//, "");
 
 const hasTraversal = (value: string): boolean => value.split("/").some((part) => part === ".." || part === ".");
 
