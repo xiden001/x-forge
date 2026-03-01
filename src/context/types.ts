@@ -30,6 +30,8 @@ export interface RuntimeConfig {
   alwaysInclude: string[];
   excludePaths: string[];
   indexOnStartup: boolean;
+  maxCandidateChunks: number;
+  confirmBeforeClipboardWrite: boolean;
   principles: string[];
   glossary: Record<string, string>;
 }

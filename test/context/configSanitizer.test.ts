@@ -6,6 +6,8 @@ const baseConfig: RuntimeConfig = {
   enabled: true,
   maxChunks: 5,
   maxTokens: 1200,
+  maxCandidateChunks: 2000,
+  confirmBeforeClipboardWrite: true,
   scanPaths: ["docs", "adr"],
   alwaysInclude: ["docs/architecture.md"],
   excludePaths: [],
@@ -20,6 +22,8 @@ describe("configSanitizer", () => {
       ...baseConfig,
       maxChunks: 999,
       maxTokens: 10,
+      maxCandidateChunks: 999999,
+      confirmBeforeClipboardWrite: "yes" as unknown as boolean,
       scanPaths: ["docs", "../private"],
       alwaysInclude: ["docs/architecture.md", "../secret.md"],
       excludePaths: ["node_modules", "../../"],
@@ -28,6 +32,8 @@ describe("configSanitizer", () => {
 
     assert.equal(sanitized.maxChunks, 20);
     assert.equal(sanitized.maxTokens, 200);
+    assert.equal(sanitized.maxCandidateChunks, 20_000);
+    assert.equal(sanitized.confirmBeforeClipboardWrite, true);
     assert.deepEqual(sanitized.scanPaths, ["docs"]);
     assert.deepEqual(sanitized.alwaysInclude, ["docs/architecture.md"]);
     assert.deepEqual(sanitized.excludePaths, ["node_modules"]);

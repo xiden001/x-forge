@@ -9,7 +9,7 @@ export class ContextRetriever {
     const result: RetrievedChunk[] = [];
     const pinnedSources = new Set(config.alwaysInclude);
 
-    const fastCandidates = this.fastCandidateFilter(index, signals);
+    const fastCandidates = this.fastCandidateFilter(index, signals, config.maxCandidateChunks);
 
     for (const chunk of fastCandidates) {
       const pinned = pinnedSources.has(chunk.source);
@@ -23,7 +23,7 @@ export class ContextRetriever {
     return top;
   }
 
-  private fastCandidateFilter(index: ContextIndex, signals: RetrievalSignals) {
+  private fastCandidateFilter(index: ContextIndex, signals: RetrievalSignals, maxCandidateChunks: number) {
     const tokens = tokenizeKeywords(`${signals.prompt} ${signals.filePath} ${signals.selection} ${signals.filenameKeywords.join(" ")}`);
     const candidateIds = new Set<string>();
 
@@ -36,11 +36,11 @@ export class ContextRetriever {
     }
 
     if (!candidateIds.size) {
-      return index.chunks;
+      return index.chunks.slice(0, maxCandidateChunks);
     }
 
     const idSet = candidateIds;
-    return index.chunks.filter((chunk) => idSet.has(chunk.id));
+    return index.chunks.filter((chunk) => idSet.has(chunk.id)).slice(0, maxCandidateChunks);
   }
 
   private enforceTokenBudget(chunks: RetrievedChunk[], maxChunks: number, maxTokens: number): RetrievedChunk[] {

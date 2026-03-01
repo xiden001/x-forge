@@ -17,6 +17,8 @@ const loadConfig = (): RuntimeConfig => {
     enabled: cfg.get<boolean>("enabled", true),
     maxChunks: cfg.get<number>("maxChunks", 5),
     maxTokens: cfg.get<number>("maxTokens", 1200),
+    maxCandidateChunks: cfg.get<number>("maxCandidateChunks", 2000),
+    confirmBeforeClipboardWrite: cfg.get<boolean>("confirmBeforeClipboardWrite", true),
     scanPaths: cfg.get<string[]>("scanPaths", ["docs", "adr"]),
     alwaysInclude: cfg.get<string[]>("alwaysInclude", ["docs/architecture.md"]),
     excludePaths: cfg.get<string[]>("excludePaths", []),

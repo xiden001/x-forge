@@ -59,10 +59,14 @@ const sanitizeIntegerInRange = (value: unknown, fallback: number, min: number, m
   return Math.min(clampedToMin, max);
 };
 
+const sanitizeBoolean = (value: unknown, fallback: boolean): boolean => (typeof value === "boolean" ? value : fallback);
+
 export const sanitizeRuntimeConfig = (config: RuntimeConfig): RuntimeConfig => ({
   ...config,
   maxChunks: sanitizeIntegerInRange(config.maxChunks, 5, 1, 20),
   maxTokens: sanitizeIntegerInRange(config.maxTokens, 1200, 200, 8000),
+  maxCandidateChunks: sanitizeIntegerInRange(config.maxCandidateChunks, 2000, 200, 20_000),
+  confirmBeforeClipboardWrite: sanitizeBoolean(config.confirmBeforeClipboardWrite, true),
   scanPaths: sanitizeRelativePaths(sanitizeStringArray(config.scanPaths, ["docs", "adr"])),
   alwaysInclude: sanitizeRelativePaths(sanitizeStringArray(config.alwaysInclude, ["docs/architecture.md"])),
   excludePaths: sanitizeRelativePaths(sanitizeStringArray(config.excludePaths, [])),

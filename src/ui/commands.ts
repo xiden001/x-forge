@@ -61,6 +61,19 @@ export class CommandController {
     this.view.setChunks(assembled.retrieved);
 
     const finalPrompt = this.state.injectionEnabled ? assembled.envelope : prompt;
+    if (this.state.config.confirmBeforeClipboardWrite) {
+      const action = await vscode.window.showWarningMessage(
+        `Copy prompt to clipboard with ${assembled.retrieved.length} context chunks?`,
+        { modal: true },
+        "Copy"
+      );
+
+      if (action !== "Copy") {
+        this.output.appendLine("Clipboard write cancelled by user.");
+        return;
+      }
+    }
+
     await vscode.env.clipboard.writeText(finalPrompt);
     this.output.appendLine(`Copied prompt with ${assembled.retrieved.length} context chunks.`);
     void vscode.window.showInformationMessage("Prompt copied to clipboard.");
