@@ -1,10 +1,38 @@
-import * as path from "path";
 
 const alwaysIncludeFiles = new Set(["README.md", "CONTRIBUTING.md", "team-context.yaml"]);
 
-export const normalizePath = (value: string): string => value.split(path.sep).join("/").replace(/^\.\//, "");
+export const normalizePath = (value: string): string =>
+  value.replace(/[\\/]+/g, "/").replace(/^\.\//, "");
 
-export const normalizeScanRoot = (scanPath: string): string => normalizePath(scanPath).replace(/^\/+/, "").replace(/\/+$/, "");
+const hasTraversal = (value: string): boolean => value.split("/").some((part) => part === ".." || part === ".");
+
+export const normalizeScanRoot = (scanPath: string): string => {
+  const normalized = normalizePath(scanPath).replace(/^\/+/, "").replace(/\/+$/, "");
+  if (!normalized || hasTraversal(normalized)) {
+    return "";
+  }
+
+  return normalized;
+};
+
+export const sanitizeRelativePaths = (values: string[]): string[] => {
+  const unique = new Set<string>();
+
+  for (const value of values) {
+    if (typeof value !== "string") {
+      continue;
+    }
+
+    const normalized = normalizeScanRoot(value);
+    if (!normalized) {
+      continue;
+    }
+
+    unique.add(normalized);
+  }
+
+  return Array.from(unique);
+};
 
 export const shouldIncludeRelativePath = (relativePath: string, scanPaths: string[]): boolean => {
   const normalized = normalizePath(relativePath).replace(/^\/+/, "");
@@ -17,6 +45,6 @@ export const shouldIncludeRelativePath = (relativePath: string, scanPaths: strin
     return false;
   }
 
-  const normalizedRoots = scanPaths.map(normalizeScanRoot).filter(Boolean);
+  const normalizedRoots = sanitizeRelativePaths(scanPaths);
   return normalizedRoots.some((root) => normalized === root || normalized.startsWith(`${root}/`));
 };
