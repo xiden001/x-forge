@@ -1,14 +1,11 @@
 import * as vscode from "vscode";
-import { normalizePath, sanitizeRelativePaths, shouldIncludeRelativePath } from "./contextPathFilter";
+import { buildContextIncludeSources, normalizePath, sanitizeRelativePaths, shouldIncludeRelativePath } from "./contextPathFilter";
 
-const includePatterns = ["**/*.md", "**/*.markdown", "team-context.yaml"];
 const defaultExcludeRoots = ["node_modules", ".git", ".yarn", ".pnpm-store", ".vscode-test"];
 
 export const scanContextFiles = async (scanPaths: string[], excludePaths: string[]): Promise<vscode.Uri[]> => {
   const safeScanPaths = sanitizeRelativePaths(scanPaths);
-  const roots = ["README.md", "CONTRIBUTING.md", ...safeScanPaths.map((p) => `${p}/**`)];
-  const includeSources = safeScanPaths.length ? roots : [...roots, ...includePatterns];
-  const includeGlob = `{${includeSources.join(",")}}`;
+  const includeGlob = `{${buildContextIncludeSources(safeScanPaths).join(",")}}`;
 
   const allExcludes = [...defaultExcludeRoots, ...sanitizeRelativePaths(excludePaths)].filter(Boolean);
   const excludes = allExcludes.length ? `{${allExcludes.map((p) => `${p}/**`).join(",")}}` : undefined;

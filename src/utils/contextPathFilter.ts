@@ -34,6 +34,13 @@ export const sanitizeRelativePaths = (values: string[]): string[] => {
   return Array.from(unique);
 };
 
+
+export const buildContextIncludeSources = (scanPaths: string[]): string[] => {
+  const normalizedRoots = sanitizeRelativePaths(scanPaths);
+  const base = ["README.md", "CONTRIBUTING.md", ...normalizedRoots.map((p) => `${p}/**`)];
+  return normalizedRoots.length ? [...base, "team-context.yaml"] : [...base, "**/*.md", "**/*.markdown", "team-context.yaml"];
+};
+
 export const shouldIncludeRelativePath = (relativePath: string, scanPaths: string[]): boolean => {
   const normalized = normalizePath(relativePath).replace(/^\/+/, "");
 

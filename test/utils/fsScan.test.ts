@@ -1,5 +1,5 @@
 import { strict as assert } from "assert";
-import { sanitizeRelativePaths, shouldIncludeRelativePath } from "../../src/utils/contextPathFilter";
+import { buildContextIncludeSources, sanitizeRelativePaths, shouldIncludeRelativePath } from "../../src/utils/contextPathFilter";
 
 describe("shouldIncludeRelativePath", () => {
   it("includes root README/CONTRIBUTING and team-context.yaml", () => {
@@ -24,5 +24,18 @@ describe("shouldIncludeRelativePath", () => {
 
   it("drops traversal-like and duplicate paths", () => {
     assert.deepEqual(sanitizeRelativePaths(["docs", "../secrets", "docs/", "a/./tmp", "adr"]), ["docs", "adr"]);
+  });
+});
+
+
+describe("buildContextIncludeSources", () => {
+  it("always includes team-context.yaml when scan roots are set", () => {
+    assert.deepEqual(buildContextIncludeSources(["docs", "adr"]), [
+      "README.md",
+      "CONTRIBUTING.md",
+      "docs/**",
+      "adr/**",
+      "team-context.yaml"
+    ]);
   });
 });
