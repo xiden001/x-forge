@@ -7,7 +7,8 @@ const defaultExcludeRoots = ["node_modules", ".git", ".yarn", ".pnpm-store", ".v
 export const scanContextFiles = async (scanPaths: string[], excludePaths: string[]): Promise<vscode.Uri[]> => {
   const safeScanPaths = sanitizeRelativePaths(scanPaths);
   const roots = ["README.md", "CONTRIBUTING.md", ...safeScanPaths.map((p) => `${p}/**`)];
-  const includeGlob = `{${[...roots, ...includePatterns].join(",")}}`;
+  const includeSources = safeScanPaths.length ? roots : [...roots, ...includePatterns];
+  const includeGlob = `{${includeSources.join(",")}}`;
 
   const allExcludes = [...defaultExcludeRoots, ...sanitizeRelativePaths(excludePaths)].filter(Boolean);
   const excludes = allExcludes.length ? `{${allExcludes.map((p) => `${p}/**`).join(",")}}` : undefined;

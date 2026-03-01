@@ -42,10 +42,27 @@ const sanitizeGlossary = (value: unknown, fallback: Record<string, string>): Rec
   return Object.keys(sanitized).length ? sanitized : fallback;
 };
 
+const sanitizeIntegerInRange = (value: unknown, fallback: number, min: number, max: number): number => {
+  let numericValue: number;
+
+  if (value === undefined || value === null) {
+    numericValue = fallback;
+  } else if (typeof value === "number") {
+    numericValue = value;
+  } else {
+    const converted = Number(value);
+    numericValue = Number.isFinite(converted) ? converted : fallback;
+  }
+
+  const floored = Math.floor(numericValue);
+  const clampedToMin = Math.max(floored, min);
+  return Math.min(clampedToMin, max);
+};
+
 export const sanitizeRuntimeConfig = (config: RuntimeConfig): RuntimeConfig => ({
   ...config,
-  maxChunks: Math.min(Math.max(Math.floor(config.maxChunks) || 5, 1), 20),
-  maxTokens: Math.min(Math.max(Math.floor(config.maxTokens) || 1200, 200), 8000),
+  maxChunks: sanitizeIntegerInRange(config.maxChunks, 5, 1, 20),
+  maxTokens: sanitizeIntegerInRange(config.maxTokens, 1200, 200, 8000),
   scanPaths: sanitizeRelativePaths(sanitizeStringArray(config.scanPaths, ["docs", "adr"])),
   alwaysInclude: sanitizeRelativePaths(sanitizeStringArray(config.alwaysInclude, ["docs/architecture.md"])),
   excludePaths: sanitizeRelativePaths(sanitizeStringArray(config.excludePaths, [])),
